@@ -50,17 +50,33 @@ export const updateTasks = async (
     return data ?? [];
 };
 
+export const deleteTasks = async (
+    ids: number[]) => {
+    const { data, error } = await supabase
+        .from('Tasks')
+        .delete()
+        .in('id', ids);
+
+    if (error){
+        console.error('Error deleting task:', error);
+        return null
+    }else{
+        console.log(data)
+        return {success: true, data};
+    }
+
+};
+
 export const deleteTask = async (id: number) => {
-    const { error } = await supabase
+    const { data, error } = await supabase
         .from('Tasks')
         .delete()
         .eq('id', id);
 
-    if (error){
+    if (error) {
         console.error('Error deleting task:', error);
-        return {success: false , error};
-    }else{
-        return {success: true};
+        return { success: false, error };
     }
 
-};
+    return { success: true, data };
+}
